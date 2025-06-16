@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: pet_app_database_user
+      POSTGRES_PASSWORD: nMsC1zp9QbAwX4sIZd3Rdo8hamPWRgLq
+      POSTGRES_DB: pet_app_database
+    volumes:
+      - petappdb:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pet_app_database_user"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+
+  spring:
+    build:
+      context: ./Pet-app-Evangelia
+      dockerfile: Dockerfile
+    image: petapp-evangelia:latest
+    container_name: petapp_backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/pet_app_database
+      SPRING_DATASOURCE_USERNAME: pet_app_database_user
+      SPRING_DATASOURCE_PASSWORD: nMsC1zp9QbAwX4sIZd3Rdo8hamPWRgLq
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+
+  frontend:
+    build:
+      context: ./Pet-app-frontend-main
+      dockerfile: Dockerfile
+    image: petapp-frontend:latest
+    container_name: petapp_frontend
+    ports:
+      - "9000:80"
+    depends_on:
+      spring:
+        condition: service_healthy
+    environment:
+      VITE_BACKEND: http://spring:8080
+
+volumes:
+  petappdb:

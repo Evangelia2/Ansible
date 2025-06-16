@@ -1,0 +1,11 @@
+app:
+  env:
+    server.port: "{{ app_port }}"
+    spring.datasource.username: "pet_app_database_user"
+    spring.datasource.password: "nMsC1zp9QbAwX4sIZd3Rdo8hamPWRgLq"
+    spring.datasource.url: "jdbc:postgresql://4.211.249.239:5432/pet_app_database"
+
+service:
+  workingdir: "/home/rg/spring"
+  execstart: "java -jar target/springbootdemo-0.0.1-SNAPSHOT.jar"
+
