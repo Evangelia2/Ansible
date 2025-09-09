@@ -1,34 +1,30 @@
 ---
 - hosts: frontserver
+
   vars:
-    frontendappdir: "/home/vagrant/frontend"
-    branch: main
-    site_location: /var/www/vue
+      frontendappdir: "{{ ansible_user_dir }}/frontend"
+      branch: "main"
+      site_location: /var/www/vue
 
   pre_tasks:
-    - name: Get public IP
+
+    - name: Find my public ip
       uri:
         url: http://ifconfig.me/ip
         return_content: yes
       register: ip_response
 
-    - name: Show public IP
+    - name: See public ip
       debug:
         var: ip_response.content
 
     - name: Install Nginx
-      apt:
+      package:
         name: nginx
         state: latest
       become: yes
 
-    - name: Install git
-      apt:
-        name: git
-        state: latest
-      become: yes
-
-    - name: Install NVM (Node Version Manager)
+    - name: Install nvm
       shell: |
         curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
       args:
@@ -61,13 +57,14 @@
       become: yes
 
 
+
   tasks:
-    - name: Clone the Vue repository
+    - name: "Clone the Vue repository"
       git:
-        repo: "https://github.com/georgetzalas/Pet-app-frontend"
-        dest: "{{ frontendappdir }}"
-        version: "main"
-        force: yes
+          repo: "https://github.com/gkoulis/ds-lab-2023-frontend.git"
+          dest: "{{ frontendappdir }}"
+          version: "{{ branch }}"
+          force: yes
 
     - name: copy env file
       shell : "cp {{frontendappdir}}/.env.example {{frontendappdir}}/.env"
@@ -103,12 +100,7 @@
         force: true
       notify: restart nginx
       become: yes
-  handlers:
-    - name: restart nginx
-      service:
-        name: nginx
-        state: restarted
-      become: true
+
     - name: copy nginx conf file
       template:
         src: ../files/nginx.vue.j2
@@ -121,3 +113,20 @@
         dest: "/etc/nginx/sites-enabled/vue"
         state: link
       become: yes
+    
+
+    - name: de-activate default nginx site
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+      become: yes
+      notify: restart nginx
+    
+  handlers:
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
+      become: yes
+
+    
