@@ -8,5 +8,5 @@ appservers:
   hosts:
     appserver-vm:
       ansible_host: appserver
-    frontend-vm:
+    frontserver:
       ansible_host: frontserver
