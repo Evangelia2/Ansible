@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: appserver-vm
 
   pre_tasks:
     - name: Install Java
