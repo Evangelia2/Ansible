@@ -1,5 +1,5 @@
 ---
-- hosts: appservers
+- hosts: appserver-vm
 
   vars:
       frontendappdir: "{{ ansible_user_dir }}/frontend"
