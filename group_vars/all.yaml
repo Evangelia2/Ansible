@@ -1,15 +1,1 @@
 ansible_python_interpreter: /usr/bin/python3
-#appdir: "/home/vagrant"
-# group_vars/all.yml
-app_name: spring
-app_user: vagrant
-appdir: "{{ ansible_env.HOME }}/app"
-repo: https://github.com/georgetzalas/Pet-app/Evangelia
-branch: main
-jar_file: target/springbootdemo-0.0.1-SNAPSHOT.jar
-app:
-  env:
-    SPRING_DATASOURCE_URL: "{{ db_url }}"
-    SPRING_DATASOURCE_USERNAME: "{{ db_user }}"
-    SPRING_DATASOURCE_PASSWORD: "{{ db_pass }}"
-
