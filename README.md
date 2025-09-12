@@ -27,5 +27,5 @@
             LogLevel FATAL  
 - Ανοίγμα browser http://<jenkinsserver_ip>:8080 (http://192.168.56.120:8080/)  
 - Έυρεση password: sudo cat /var/lib/jenkins/secrets/initialAdminPassword  
-- Δημιουργία pipeline job στο ansible.Jenkinsfile και εκτέλεση  
-- Άνοιγμα browser http://<ip_of_vm>:9000  
+- Δημιουργία pipeline job στο ansible.Jenkinsfile ή στο ansible-compose.Jenkinsfile και εκτέλεση  
+- Άνοιγμα browser http://192.168.56.103/ 
